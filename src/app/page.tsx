@@ -1,6 +1,7 @@
 import Hero from '@/components/ScrollHero';
 import Collection from '@/components/sections/Collection';
 import Material from '@/components/sections/Material';
+import Testimonials from '@/components/sections/Testimonials';
 import Order from '@/components/sections/Order';
 import Footer from '@/components/sections/Footer';
 import {
@@ -26,6 +27,7 @@ export default function Home() {
       />
       <Collection />
       <Material />
+      <Testimonials />
       <Order />
       <Footer />
     </main>

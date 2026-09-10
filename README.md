@@ -95,6 +95,22 @@ l'approche libre la plus proche de la police du logo. Pour un rendu strictement
 identique, déposez le fichier de la police de la marque et changez `--font-logo`
 dans `layout.tsx` : rien d'autre ne bouge.
 
+## Les avis
+
+`src/data/testimonials.ts` reprend les commentaires laissés sous les publications
+TikTok, tels quels. Les questions sur le Gabon ou le Togo sont gardées
+volontairement : elles ne félicitent pas la marque, elles montrent mieux, la
+demande dépasse déjà la Côte d'Ivoire.
+
+Le bandeau est en CSS pur, trois colonnes qui défilent à des vitesses
+différentes. La boucle est un `translateY` de -50 % sur une liste dupliquée, ce
+qui évite d'embarquer une bibliothèque d'animation pour un seul bandeau. Le
+défilement s'arrête au survol, et `prefers-reduced-motion` le remplace par une
+grille fixe.
+
+Les cartes portent un monogramme et non un portrait : ces commentaires sont de
+vraies personnes, leur associer un visage qui n'est pas le leur serait faux.
+
 ## Structure
 
 ```

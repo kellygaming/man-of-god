@@ -1,0 +1,86 @@
+.head { max-width: 60ch; margin-bottom: clamp(32px, 5vw, 56px); }
+.head h2 { font-size: clamp(30px, 5vw, 64px); font-weight: 800; text-transform: uppercase; margin: 10px 0 16px; }
+.lede { color: var(--smoke); margin: 0; }
+.lede a { color: var(--ivory); text-decoration: none; border-bottom: 1px solid var(--red); padding-bottom: 1px; }
+
+/* Le masque efface le haut et le bas des colonnes : les cartes entrent et
+   sortent du champ au lieu d'être coupées net par le bord. */
+.columns {
+  display: flex;
+  /* Les colonnes occupent toute la largeur du conteneur : centrées, elles ne
+     s'alignaient pas sur le titre, calé à gauche comme le reste du site. */
+  justify-content: stretch;
+  gap: clamp(16px, 2vw, 28px);
+  max-height: 620px;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+}
+
+.column { flex: 1 1 0; min-width: 0; }
+
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /* La liste est dupliquée : parcourir la moitié de sa hauteur reboucle
+     exactement sur la première carte. */
+  animation: scroll var(--duration, 40s) linear infinite;
+  will-change: transform;
+}
+@keyframes scroll {
+  to { transform: translateY(-50%); }
+}
+.columns:hover .track { animation-play-state: paused; }
+
+.card {
+  background: var(--charcoal);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 24px;
+  display: grid;
+  gap: 18px;
+}
+
+.text { margin: 0; font-size: 15px; line-height: 1.55; }
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--smoke);
+}
+
+/* Monogramme plutôt qu'un portrait : ces commentaires sont de vraies
+   personnes, leur coller un visage qui n'est pas le leur serait faux. */
+.monogram {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #1f1f1f;
+  border: 1px solid rgba(244, 242, 238, 0.16);
+  color: var(--ivory);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.card:nth-child(even) .monogram { color: var(--red); }
+
+@media (max-width: 1099px) { .hideMedium { display: none; } }
+@media (max-width: 767px) { .hideSmall { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .columns { max-height: none; overflow: visible; mask-image: none; -webkit-mask-image: none; }
+  .track { animation: none; }
+  /* Sans défilement, la copie ferait doublon. */
+  .card[aria-hidden='true'] { display: none; }
+}

@@ -5,9 +5,16 @@
  * de fond commune : la grille tient comme une seule série sans qu'aucun vêtement
  * n'ait été redessiné. Ils vivent dans `public/products/`, nommés d'après le slug.
  *
- * `image: null` marque une pièce dont la photo n'est pas encore composée : la
- * carte affiche alors un cadre « visuel à venir » et reste commandable.
+ * Trois pièces attendent encore leur composition et gardent leur visuel généré,
+ * servi depuis le CDN Higgsfield. Avant la mise en ligne, `node
+ * scripts/localise-products.mjs` les rapatrie dans `public/products/` et réécrit
+ * ce fichier : le catalogue ne doit pas dépendre d'un service tiers.
+ *
+ * `image: null` marque une pièce sans aucun visuel : la carte affiche alors un
+ * cadre « visuel à venir » et reste commandable.
  */
+
+const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3HJdujTPUatDr1wioMxqGRiB5kw';
 
 export type ProductLine = 'MOG' | 'WOG' | 'CIELOS';
 export type ProductCategory = 'Pull' | 'T-shirt' | 'Top';
@@ -64,8 +71,8 @@ export const PRODUCTS: Product[] = [
     detail: 'Les trois croix du Calvaire au dos',
     colors: [COLORS.black, COLORS.grey, COLORS.white],
     sizes: SIZES,
-    image: null,
-    alt: 'Pull à capuche MAN OF GOD',
+    image: `${CDN}/hf_20260910_161206_cf664aa9-89d8-4836-9869-ff606b580d7d.png`,
+    alt: 'Pull à capuche noir MAN OF GOD, sérigraphie blanche et rouge sur la poitrine',
   },
   {
     slug: 'pull-woman-of-god',
@@ -76,8 +83,8 @@ export const PRODUCTS: Product[] = [
     detail: 'Les trois croix du Calvaire au dos',
     colors: [COLORS.black, COLORS.grey, COLORS.white],
     sizes: SIZES,
-    image: null,
-    alt: 'Pull à capuche WOMAN OF GOD',
+    image: `${CDN}/hf_20260910_161256_70eae80f-abdb-487c-a547-a3535f7c0ee7.png`,
+    alt: 'Pull à capuche noir WOMAN OF GOD, sérigraphie blanche et rouge sur la poitrine',
   },
   {
     slug: 'tshirt-delave-man-of-god',
@@ -126,6 +133,18 @@ export const PRODUCTS: Product[] = [
     sizes: SIZES,
     image: '/products/tshirt-cielos.jpg',
     alt: 'T-shirt blanc CIELOS, vu de face et de dos',
+  },
+  {
+    slug: 'tshirt-man-of-god',
+    name: 'T-shirt MAN OF GOD',
+    line: 'MOG',
+    category: 'T-shirt',
+    priceXof: 8000,
+    detail: 'Les trois croix du Calvaire au dos',
+    colors: [COLORS.white, COLORS.black],
+    sizes: SIZES,
+    image: `${CDN}/hf_20260910_161206_80d4ef33-741a-412c-b135-97a03188ca02.png`,
+    alt: 'T-shirt oversize blanc MAN OF GOD, petit logotype noir sur la poitrine',
   },
   {
     slug: 'top-woman-of-god-manches-courtes',
