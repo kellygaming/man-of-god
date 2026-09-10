@@ -19,6 +19,7 @@ const LINES: { value: LineFilter; label: string }[] = [
   { value: 'all', label: 'Tout' },
   { value: 'MOG', label: 'MOG — Homme' },
   { value: 'WOG', label: 'WOG — Femme' },
+  { value: 'CIELOS', label: 'Cielos' },
 ];
 
 /** Pluriel des catégories pour les puces de filtre. */
@@ -32,13 +33,15 @@ export default function Shop() {
   const [line, setLine] = useState<LineFilter>('all');
   const [category, setCategory] = useState<CategoryFilter>('all');
 
-  const visible = useMemo(
-    () =>
-      PRODUCTS.filter(
-        (p) => (line === 'all' || p.line === line) && (category === 'all' || p.category === category),
-      ),
-    [line, category],
-  );
+  const visible = useMemo(() => {
+    const matching = PRODUCTS.filter(
+      (p) => (line === 'all' || p.line === line) && (category === 'all' || p.category === category),
+    );
+    // Les pièces photographiées passent devant : deux cadres « visuel à venir »
+    // en tête de grille feraient une mauvaise première impression. Le tri
+    // devient sans effet dès que toutes les photos sont livrées.
+    return [...matching].sort((a, b) => Number(Boolean(b.image)) - Number(Boolean(a.image)));
+  }, [line, category]);
 
   return (
     <>

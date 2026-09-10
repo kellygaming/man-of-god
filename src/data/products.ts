@@ -1,15 +1,15 @@
 /**
- * Catalogue MAN OF GOD.
+ * Catalogue AURA BRAND.
  *
- * Les visuels sont générés sur Higgsfield avec un cadrage unique — pièce seule,
- * de face, fond charbon, même lumière — pour que la grille de la boutique tienne
- * comme une seule série. Ils sont servis depuis le CDN Higgsfield le temps de la
- * maquette : à télécharger dans `public/products/` avant la mise en ligne.
+ * Les visuels sont les photos de la marque, détourées et posées sur une planche
+ * de fond commune : la grille tient comme une seule série sans qu'aucun vêtement
+ * n'ait été redessiné. Ils vivent dans `public/products/`, nommés d'après le slug.
+ *
+ * `image: null` marque une pièce dont la photo n'est pas encore composée : la
+ * carte affiche alors un cadre « visuel à venir » et reste commandable.
  */
 
-const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3HJdujTPUatDr1wioMxqGRiB5kw';
-
-export type ProductLine = 'MOG' | 'WOG';
+export type ProductLine = 'MOG' | 'WOG' | 'CIELOS';
 export type ProductCategory = 'Pull' | 'T-shirt' | 'Top';
 
 export interface ProductColor {
@@ -28,7 +28,8 @@ export interface Product {
   detail: string;
   colors: ProductColor[];
   sizes: string[];
-  image: string;
+  /** Chemin du visuel, ou `null` tant que la photo n'est pas composée. */
+  image: string | null;
   /** Texte alternatif de l'image, pour les lecteurs d'écran. */
   alt: string;
 }
@@ -63,8 +64,8 @@ export const PRODUCTS: Product[] = [
     detail: 'Les trois croix du Calvaire au dos',
     colors: [COLORS.black, COLORS.grey, COLORS.white],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161206_cf664aa9-89d8-4836-9869-ff606b580d7d.png`,
-    alt: 'Pull à capuche noir MAN OF GOD, sérigraphie blanche et rouge sur la poitrine',
+    image: null,
+    alt: 'Pull à capuche MAN OF GOD',
   },
   {
     slug: 'pull-woman-of-god',
@@ -75,8 +76,8 @@ export const PRODUCTS: Product[] = [
     detail: 'Les trois croix du Calvaire au dos',
     colors: [COLORS.black, COLORS.grey, COLORS.white],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161256_70eae80f-abdb-487c-a547-a3535f7c0ee7.png`,
-    alt: 'Pull à capuche noir WOMAN OF GOD, sérigraphie blanche et rouge sur la poitrine',
+    image: null,
+    alt: 'Pull à capuche WOMAN OF GOD',
   },
   {
     slug: 'tshirt-delave-man-of-god',
@@ -87,8 +88,8 @@ export const PRODUCTS: Product[] = [
     detail: 'Au dos : « De Christ, par Christ, pour Christ » — Romains 11:36',
     colors: [COLORS.taupe],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161206_7aca93e2-2931-4cf3-bfc8-5f7222a19f09.png`,
-    alt: 'T-shirt oversize délavé taupe MAN OF GOD, petite croix et logotype sur la poitrine',
+    image: '/products/tshirt-delave-man-of-god.jpg',
+    alt: 'T-shirt oversize délavé taupe MAN OF GOD, vu de face et de dos',
   },
   {
     slug: 'tshirt-delave-woman-of-god',
@@ -99,32 +100,32 @@ export const PRODUCTS: Product[] = [
     detail: 'Les trois croix du Calvaire au dos',
     colors: [COLORS.stone],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161258_861e769b-6deb-4b94-b242-b6d8d54e0fbd.png`,
-    alt: 'T-shirt oversize délavé gris WOMAN OF GOD, logotype noir et rouge sur la poitrine',
+    image: '/products/tshirt-delave-woman-of-god.jpg',
+    alt: 'T-shirt oversize délavé gris WOMAN OF GOD, vu de face et de dos',
   },
   {
-    slug: 'tshirt-woman-of-god',
-    name: 'T-shirt WOMAN OF GOD',
+    slug: 'tshirt-manches-longues-woman-of-god',
+    name: 'T-shirt manches longues WOMAN OF GOD',
     line: 'WOG',
     category: 'T-shirt',
     priceXof: 8000,
-    detail: 'Au dos : dessin au trait — 2 Corinthiens 6:18',
-    colors: [COLORS.white, COLORS.black],
+    detail: 'Dessin au trait : le berger et l’agneau',
+    colors: [COLORS.white],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161206_cb665ba4-6b1a-4af0-90c7-fd2d4465464d.png`,
-    alt: 'T-shirt blanc WOMAN OF GOD, petit logotype noir et rouge sur la poitrine',
+    image: '/products/tshirt-manches-longues-woman-of-god.jpg',
+    alt: 'T-shirt blanc à manches longues WOMAN OF GOD, avec un dessin au trait',
   },
   {
-    slug: 'tshirt-man-of-god',
-    name: 'T-shirt MAN OF GOD',
-    line: 'MOG',
+    slug: 'tshirt-cielos',
+    name: 'T-shirt CIELOS',
+    line: 'CIELOS',
     category: 'T-shirt',
     priceXof: 8000,
-    detail: 'Les trois croix du Calvaire au dos',
-    colors: [COLORS.white, COLORS.black],
+    detail: 'Au dos : dessin au trait — Éphésiens 2:19',
+    colors: [COLORS.white],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161206_80d4ef33-741a-412c-b135-97a03188ca02.png`,
-    alt: 'T-shirt oversize blanc MAN OF GOD, petit logotype noir sur la poitrine',
+    image: '/products/tshirt-cielos.jpg',
+    alt: 'T-shirt blanc CIELOS, vu de face et de dos',
   },
   {
     slug: 'top-woman-of-god-manches-courtes',
@@ -135,8 +136,8 @@ export const PRODUCTS: Product[] = [
     detail: 'Coupe ajustée, maille côtelée',
     colors: [COLORS.black, COLORS.white],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161206_5b6dfd1e-b470-4027-bb0b-bacbd2dde7b6.png`,
-    alt: 'Top ajusté noir à manches courtes WOMAN OF GOD, petit logotype sur la poitrine',
+    image: '/products/top-woman-of-god-manches-courtes.jpg',
+    alt: 'Top ajusté WOMAN OF GOD à manches courtes, en noir et en blanc',
   },
   {
     slug: 'top-woman-of-god-manches-longues',
@@ -147,8 +148,8 @@ export const PRODUCTS: Product[] = [
     detail: 'Coupe ajustée, maille côtelée',
     colors: [COLORS.black, COLORS.pink, COLORS.white],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161206_efbabf60-d671-4ed8-8fb6-134c5b0e993c.png`,
-    alt: 'Top ajusté noir à manches longues WOMAN OF GOD, petit logotype sur la poitrine',
+    image: '/products/top-woman-of-god-manches-longues.jpg',
+    alt: 'Top ajusté WOMAN OF GOD à manches longues, en blanc, rose et noir',
   },
 ];
 
@@ -157,5 +158,5 @@ export const CATEGORIES: ProductCategory[] = ['Pull', 'T-shirt', 'Top'];
 
 /** Prix formaté avec des espaces insécables : « 15 000 FCFA » ne se coupe pas. */
 export function formatPrice(priceXof: number) {
-  return `${priceXof.toLocaleString('fr-FR').replace(/\s/g, ' ')} FCFA`;
+  return `${priceXof.toLocaleString('fr-FR').replace(/\s/g, ' ')} FCFA`;
 }

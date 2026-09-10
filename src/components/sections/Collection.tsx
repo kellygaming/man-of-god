@@ -6,9 +6,9 @@ import styles from './sections.module.css';
 
 /** Aperçu de la collection sur l'accueil : quatre pièces, puis la boutique. */
 const PREVIEW_SLUGS = [
-  'pull-man-of-god',
-  'pull-woman-of-god',
   'tshirt-delave-man-of-god',
+  'tshirt-delave-woman-of-god',
+  'tshirt-cielos',
   'top-woman-of-god-manches-longues',
 ];
 

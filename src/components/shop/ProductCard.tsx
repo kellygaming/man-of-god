@@ -15,14 +15,20 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
   return (
     <li className={styles.card}>
       <div className={styles.thumb}>
-        <Image
-          src={product.image}
-          alt={product.alt}
-          fill
-          sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 23vw"
-          className={styles.image}
-          priority={priority}
-        />
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.alt}
+            fill
+            sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 23vw"
+            className={styles.image}
+            priority={priority}
+          />
+        ) : (
+          /* La photo n'est pas encore composée : la pièce reste commandable
+             plutôt que d'être retirée du catalogue. */
+          <p className={styles.pending}>Visuel à venir</p>
+        )}
         <span className={styles.badge}>{product.line}</span>
       </div>
 

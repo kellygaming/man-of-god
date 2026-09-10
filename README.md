@@ -130,18 +130,21 @@ texte alternatif. L'offre « deux tops pour 11 000 FCFA » est décrite une fois
 
 ### Visuels produit
 
-Ils sont générés sur Higgsfield avec un cadrage unique — pièce seule, de face,
-fond charbon, même lumière — pour que la grille tienne comme une seule série.
-Le fond est charbon plutôt que noir pur, sinon les pièces noires disparaîtraient.
+Ce sont les photos de la marque, détourées et posées sur une planche de fond
+commune sous Canva. Aucun vêtement n'est redessiné : la grille tient parce que
+toutes les cartes partagent le même décor, la même lumière et la même échelle.
+Le fond est charbon plutôt que noir pur, sinon les pièces noires y
+disparaîtraient.
 
-Ils sont servis depuis le CDN Higgsfield le temps de la maquette. Avant la mise
-en ligne, une commande les rapatrie et réécrit le catalogue :
+Les fichiers vivent dans `public/products/`, en 1080 × 1440, nommés d'après le
+slug de la pièce. Pour en ajouter un, déposez l'image et renseignez `image` dans
+`src/data/products.ts`.
 
-```bash
-node scripts/localise-products.mjs
-```
+`image: null` marque une pièce dont la photo n'est pas encore composée : la carte
+affiche un cadre « visuel à venir » et la pièce reste commandable. La boutique
+place ces cartes en fin de grille, pour ne pas ouvrir sur des cadres vides.
 
-Il reste ensuite à retirer `remotePatterns` de `next.config.mjs`.
+La méthode de composition est décrite dans `docs/visuels-boutique.md`.
 
 ## À compléter
 
