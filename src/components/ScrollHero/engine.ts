@@ -17,12 +17,28 @@ export type HeroMode = 'frames' | 'keyframes';
 export interface FrameSet {
   /** Nombre de frames du clip A (hoodie → tissu). */
   a: number;
-  /** Nombre de frames du clip B (hoodie → mannequin). */
-  b: number;
+  /**
+   * Nombre de frames du clip B (hoodie → mannequin).
+   * Omis tant que le clip B n'est pas tourné : la séquence couvre alors les
+   * deux premiers actes, et la révélation est jouée depuis `revealImage`.
+   */
+  b?: number;
   /** Préfixe d'URL, ex. "/hero/frames/16x9/". */
   path: string;
-  /** Construit le nom de fichier, ex. (clip, i) => `${clip}_${pad(i)}.webp`. */
-  pattern: (clip: 'a' | 'b', oneBasedIndex: number) => string;
+  /** Extension des fichiers, sans le point. Par défaut "webp". */
+  ext?: string;
+  /** Nombre de chiffres de l'index : 4 donne `a_0001.webp`. Par défaut 4. */
+  pad?: number;
+}
+
+/**
+ * Nom de fichier d'une frame. Le jeu d'options doit rester sérialisable pour
+ * traverser la frontière serveur/client de Next : d'où une description du
+ * nommage plutôt qu'une fonction.
+ */
+function frameSrc(set: FrameSet, clip: 'a' | 'b', oneBasedIndex: number) {
+  const index = String(oneBasedIndex).padStart(set.pad ?? 4, '0');
+  return `${set.path}${clip}_${index}.${set.ext ?? 'webp'}`;
 }
 
 export interface KeyframeSet {
@@ -46,6 +62,11 @@ export interface ScrollHeroOptions {
   frames?: FrameSet;
   /** Séquence 9:16 utilisée sous 768 px. */
   mobileFrames?: FrameSet;
+  /**
+   * Image de révélation utilisée en mode `frames` quand le clip B manque :
+   * elle est fondue par-dessus la dernière frame du clip A.
+   */
+  revealImage?: string;
   acts?: Acts;
   chapters?: Chapters;
   /** Inertie du scroll : 0 = brut, 1 = figé. */
@@ -111,6 +132,9 @@ export class ScrollHero {
   private timeline: FrameKey[] = [];
   private cache = new Map<string, PendingImage>();
   private frameSet: FrameSet | null = null;
+  /** Image de révélation, et fin de la plage couverte par la séquence. */
+  private revealImg: HTMLImageElement | null = null;
+  private framesCover = 1;
 
   constructor(root: HTMLElement, options: ScrollHeroOptions = {}) {
     const sticky = root.querySelector<HTMLElement>('[data-hero-sticky]');
@@ -203,12 +227,23 @@ export class ScrollHero {
     if (!set) throw new Error('option `frames` manquante');
     this.frameSet = set;
 
-    // Timeline virtuelle : A(0..n-1), A inversé (n-2..1), B(0..m-1).
+    // Timeline virtuelle : A(0..n-1), A inversé (n-2..1), puis B(0..m-1).
+    // Le retour tissu → hoodie réutilise les frames de A, il ne coûte rien.
     const timeline: FrameKey[] = [];
     for (let i = 0; i < set.a; i++) timeline.push(['a', i] as const);
     for (let i = set.a - 2; i > 0; i--) timeline.push(['a', i] as const);
-    for (let i = 0; i < set.b; i++) timeline.push(['b', i] as const);
+    for (let i = 0; i < (set.b ?? 0); i++) timeline.push(['b', i] as const);
     this.timeline = timeline;
+
+    // Sans clip B, la séquence s'arrête au début de la révélation ; le reste
+    // de la course est joué par le fondu sur `revealImage`.
+    this.framesCover = set.b ? 1 : this.opts.acts.reveal[0];
+    if (!set.b && this.opts.revealImage) {
+      void loadImage(this.opts.revealImage).then((img) => {
+        this.revealImg = img;
+        this.dirty = true;
+      });
+    }
 
     // Première frame bloquante, le reste en tâche de fond.
     await this.loadFrame(timeline[0]);
@@ -216,8 +251,7 @@ export class ScrollHero {
   }
 
   private srcOf(key: FrameKey) {
-    const set = this.frameSet!;
-    return set.path + set.pattern(key[0], key[1] + 1);
+    return frameSrc(this.frameSet!, key[0], key[1] + 1);
   }
 
   private loadFrame(key: FrameKey): PendingImage {
@@ -324,10 +358,21 @@ export class ScrollHero {
   private drawFrames(p: number) {
     const total = this.timeline.length;
     if (!total) return;
-    const index = Math.round(p * (total - 1));
+
+    const seek = clamp(p / this.framesCover, 0, 1);
+    const index = Math.round(seek * (total - 1));
     const key = this.timeline[index];
     const img = this.cache.get(`${key[0]}_${key[1]}`)?.settled ?? this.nearestLoaded(index);
-    if (img) this.cover(img, 1, 1);
+
+    // Sans clip B, le troisième acte recule légèrement sur la dernière frame
+    // et fait monter l'image de révélation par-dessus.
+    const reveal = this.opts.acts.reveal;
+    const t = this.framesCover < 1
+      ? easeInOut(clamp((p - reveal[0]) / (reveal[1] - reveal[0]), 0, 1))
+      : 0;
+
+    if (img) this.cover(img, lerp(1, 0.78, t), 1);
+    if (t > 0) this.cover(this.revealImg, lerp(1.9, 1, t), clamp(t / 0.6, 0, 1));
 
     for (let d = 1; d <= this.opts.preloadAhead; d++) {
       const i = index + d;

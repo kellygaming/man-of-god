@@ -43,19 +43,36 @@ NEXT_PUBLIC_HERO_MODE=frames
    et à basculer sur `HERO_KEYFRAMES_LOCAL` avant la mise en ligne : le premier
    écran du site ne doit pas dépendre d'un CDN tiers.
 2. **Clips vidéo** — deux clips seulement, prompts dans `docs/prompts-fal.md` :
-   - **A** : image clé 1 vers image clé 2, entrée dans le tissu.
-   - **B** : image clé 1 vers image clé 3, recul vers le mannequin.
+   - **A** : image clé 1 vers image clé 2, entrée dans le tissu. **Livré.**
+   - **B** : image clé 1 vers image clé 3, recul vers le mannequin. **À tourner.**
 
    Le dézoom tissu vers hoodie réutilise les frames de A à l'envers, il n'y a
    donc rien à générer pour lui. Les deux clips partant de la même image, la
    jonction est exacte.
+
+   Tant que le clip B manque, le moteur couvre les deux premiers actes avec la
+   séquence et joue la révélation en fondu depuis `HERO_KEYFRAMES.model`.
+   Il suffira d'ajouter le champ `b` à `HERO_FRAMES` pour basculer.
 3. **Extraction** :
    ```bash
-   ./scripts/extract-frames.sh clipA.mp4 clipB.mp4 public/hero/frames/16x9 1600
+   ./scripts/extract-frames.sh clipA.mp4 [clipB.mp4] public/hero/frames/16x9 1600
    ```
-   Le script affiche le nombre de frames obtenues. Reporter ces deux nombres
-   dans `src/config/hero.ts`, champs `HERO_FRAMES.a` et `HERO_FRAMES.b`.
-4. Répéter en 9:16 dans `public/hero/frames/9x16/` pour le mobile.
+   Le script affiche le nombre de frames obtenues et la ligne de configuration
+   à reporter dans `src/config/hero.ts`.
+4. Répéter en 9:16 dans `public/hero/frames/9x16/` pour le mobile, puis
+   renseigner `HERO_FRAMES_MOBILE`.
+
+### État actuel de la séquence
+
+| | |
+|---|---|
+| Source | clip A, 7,8 s, 850x480, 30 ips |
+| Extrait | 187 frames WebP à 24 ips, 4,1 Mo |
+| Couverture | actes 1 et 2 ; acte 3 en fondu sur l'image clé |
+
+La source est en 850x480, soit un agrandissement d'environ 1,7x sur un écran
+de 1440 px. La texture le supporte, la sérigraphie de la première frame est
+visiblement adoucie. À retourner en 1080p, ou à agrandir, avant la mise en ligne.
 
 ### Réglages
 
@@ -84,6 +101,7 @@ src/
 
 ## À compléter
 
+- Clip B, et reprise du clip A en 1080p.
 - Prix des t-shirts. Le champ `priceXof` vaut `null` dans
   `src/data/products.ts`, ce qui affiche « prix sur demande ».
 - Photos produit dans `public/products/`, qui remplaceront l'aperçu

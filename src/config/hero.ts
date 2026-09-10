@@ -23,26 +23,22 @@ export const HERO_KEYFRAMES_LOCAL: KeyframeSet = {
   model: '/hero/keyframes/k3-model.png',
 };
 
-const pad4 = (n: number) => String(n).padStart(4, '0');
-
 /**
- * Séquences d'images extraites des clips fal.ai par `scripts/extract-frames.sh`.
+ * Séquences d'images extraites des clips par `scripts/extract-frames.sh`.
  * `a` et `b` doivent correspondre au nombre réel de fichiers : le script
  * l'affiche à la fin de l'extraction.
+ *
+ * `b` est absent tant que le clip B (hoodie → mannequin) n'est pas tourné :
+ * la séquence couvre alors les deux premiers actes et la révélation est jouée
+ * en fondu depuis `HERO_KEYFRAMES.model`.
  */
 export const HERO_FRAMES: FrameSet = {
-  a: 96,
-  b: 96,
+  a: 187,
   path: '/hero/frames/16x9/',
-  pattern: (clip, i) => `${clip}_${pad4(i)}.webp`,
 };
 
-export const HERO_FRAMES_MOBILE: FrameSet = {
-  a: 96,
-  b: 96,
-  path: '/hero/frames/9x16/',
-  pattern: (clip, i) => `${clip}_${pad4(i)}.webp`,
-};
+/** Séquence 9:16, à remplir quand les clips seront tournés au format mobile. */
+export const HERO_FRAMES_MOBILE: FrameSet | null = null;
 
 /**
  * Bascule le hero en mode production dès que les frames sont présentes.

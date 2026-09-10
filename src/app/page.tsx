@@ -16,7 +16,12 @@ export default function Home() {
       <Hero
         options={
           HERO_MODE === 'frames'
-            ? { mode: 'frames', frames: HERO_FRAMES, mobileFrames: HERO_FRAMES_MOBILE }
+            ? {
+                mode: 'frames',
+                frames: HERO_FRAMES,
+                ...(HERO_FRAMES_MOBILE ? { mobileFrames: HERO_FRAMES_MOBILE } : {}),
+                revealImage: HERO_KEYFRAMES.model,
+              }
             : { mode: 'keyframes', keyframes: HERO_KEYFRAMES }
         }
       />
