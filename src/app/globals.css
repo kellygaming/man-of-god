@@ -64,8 +64,10 @@ h1, h2, h3 { line-height: 1.05; letter-spacing: -0.02em; margin: 0; }
   z-index: 1;
   background: var(--black);
   padding-block: var(--section-y);
-  border-top: 1px solid var(--line);
 }
+/* Filet entre deux sections seulement : le hero finit sur un tissu presque
+   noir et doit se fondre dans la page sans rupture. */
+.section + .section { border-top: 1px solid var(--line); }
 
 .button {
   display: inline-flex;

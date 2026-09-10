@@ -20,7 +20,6 @@ export default function Home() {
                 mode: 'frames',
                 frames: HERO_FRAMES,
                 ...(HERO_FRAMES_MOBILE ? { mobileFrames: HERO_FRAMES_MOBILE } : {}),
-                revealImage: HERO_KEYFRAMES.model,
               }
             : { mode: 'keyframes', keyframes: HERO_KEYFRAMES }
         }

@@ -50,7 +50,7 @@ export default function Hero({ options }: ScrollHeroProps) {
           </nav>
 
           <div className={styles.stage}>
-            {/* Acte 1 — le vêtement */}
+            {/* Ouverture — le vêtement */}
             <div className={`${styles.chapter} ${styles.intro}`} data-chapter="intro">
               <p className="eyebrow">Nouvelle collection — MOG &amp; WOG</p>
               <h1 className={styles.title}>
@@ -58,7 +58,7 @@ export default function Hero({ options }: ScrollHeroProps) {
               </h1>
             </div>
 
-            {/* Acte 2 — la matière */}
+            {/* Milieu de course — la matière */}
             <div className={`${styles.chapter} ${styles.texture}`} data-chapter="texture">
               <p className="eyebrow label">La matière</p>
               <h2>Un coton lourd, une main douce.</h2>
@@ -68,8 +68,8 @@ export default function Hero({ options }: ScrollHeroProps) {
               </p>
             </div>
 
-            {/* Acte 3 — la révélation */}
-            <div className={`${styles.chapter} ${styles.reveal}`} data-chapter="reveal">
+            {/* Fin de course — l'appel à l'action, sur le tissu presque noir */}
+            <div className={`${styles.chapter} ${styles.outro}`} data-chapter="outro">
               <h2>
                 Porté avec foi.
                 <br />

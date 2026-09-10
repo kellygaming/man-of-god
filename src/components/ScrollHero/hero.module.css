@@ -1,10 +1,11 @@
 /* Le track donne au hero sa longueur de scroll ; le sticky reste à l'écran. */
+/* Un seul mouvement : la course est plus courte qu'avec un aller-retour. */
 .hero {
   position: relative;
-  height: var(--hero-track, 420vh);
+  height: var(--hero-track, 300vh);
 }
 @media (max-width: 767px) {
-  .hero { height: 340vh; }
+  .hero { height: 260vh; }
 }
 
 .sticky {
@@ -26,7 +27,9 @@
   pointer-events: none;
   background:
     radial-gradient(120% 80% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.65) 100%),
-    linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 35%),
+    /* Le bas atteint le noir de la page : la jonction avec la première
+       section ne doit se voir à aucune position de scroll. */
+    linear-gradient(to top, var(--black), rgba(0, 0, 0, 0.5) 10%, transparent 38%),
     /* Garde la navigation lisible quand une frame claire passe derrière. */
     linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent 18%);
 }
@@ -102,8 +105,8 @@
 .texture h2 { font-size: clamp(26px, 3.6vw, 48px); font-weight: 600; max-width: 12ch; margin-left: auto; }
 .texture p { color: var(--smoke); max-width: 34ch; margin: 14px 0 0 auto; font-size: 14px; }
 
-.reveal { bottom: clamp(24px, 6vh, 80px); }
-.reveal h2 { font-size: clamp(28px, 4vw, 56px); font-weight: 700; max-width: 16ch; margin-bottom: 18px; }
+.outro { bottom: clamp(24px, 6vh, 80px); }
+.outro h2 { font-size: clamp(28px, 4vw, 56px); font-weight: 700; max-width: 16ch; margin-bottom: 18px; }
 
 .footer {
   display: flex;
@@ -155,6 +158,6 @@
   .hero { height: 100svh; }
   .sticky::after { animation: none; }
   .chapter { opacity: 1; transform: none; }
-  .texture, .reveal { display: none; }
+  .texture, .outro { display: none; }
   .hint { display: none; }
 }

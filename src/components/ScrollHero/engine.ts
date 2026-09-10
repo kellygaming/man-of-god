@@ -1,30 +1,27 @@
 /**
  * ScrollHero — moteur de hero "scrubbé" au scroll, sans dépendance.
  *
- * Deux modes de rendu, même API :
+ * Le hero joue un seul mouvement de caméra, sans coupe : un travelling avant
+ * qui part du hoodie cadré serré et entre dans la matière jusqu'au macro du
+ * molleton. La dernière image est presque noire, si bien que le hero se fond
+ * dans le fond de la page sans rupture.
  *
- *  - "frames"    : séquence d'images extraites des clips fal.ai (production).
- *                  Timeline virtuelle = [A avant][A arrière][B avant].
- *                  Le dézoom tissu → hoodie réutilise les frames de A à l'envers,
- *                  donc un seul jeu de fichiers pour deux mouvements.
+ * Deux modes de rendu derrière la même API :
  *
- *  - "keyframes" : 3 images clés (hoodie / tissu / mannequin) interpolées par
- *                  zoom + fondu sur canvas. Fallback réseau lent et mode démo.
+ *  - "frames"    : séquence d'images extraites du clip vidéo (rendu final).
+ *  - "keyframes" : deux images clés (hoodie, tissu) interpolées par zoom et
+ *                  fondu sur canvas. Repli réseau lent et mode maquette.
  */
 
 export type HeroMode = 'frames' | 'keyframes';
 
 export interface FrameSet {
-  /** Nombre de frames du clip A (hoodie → tissu). */
-  a: number;
-  /**
-   * Nombre de frames du clip B (hoodie → mannequin).
-   * Omis tant que le clip B n'est pas tourné : la séquence couvre alors les
-   * deux premiers actes, et la révélation est jouée depuis `revealImage`.
-   */
-  b?: number;
+  /** Nombre de frames de la séquence. */
+  count: number;
   /** Préfixe d'URL, ex. "/hero/frames/16x9/". */
   path: string;
+  /** Préfixe des fichiers, avant l'index. Par défaut "a". */
+  prefix?: string;
   /** Extension des fichiers, sans le point. Par défaut "webp". */
   ext?: string;
   /** Nombre de chiffres de l'index : 4 donne `a_0001.webp`. Par défaut 4. */
@@ -36,24 +33,19 @@ export interface FrameSet {
  * traverser la frontière serveur/client de Next : d'où une description du
  * nommage plutôt qu'une fonction.
  */
-function frameSrc(set: FrameSet, clip: 'a' | 'b', oneBasedIndex: number) {
+function frameSrc(set: FrameSet, oneBasedIndex: number) {
   const index = String(oneBasedIndex).padStart(set.pad ?? 4, '0');
-  return `${set.path}${clip}_${index}.${set.ext ?? 'webp'}`;
+  return `${set.path}${set.prefix ?? 'a'}_${index}.${set.ext ?? 'webp'}`;
 }
 
 export interface KeyframeSet {
+  /** Image de départ : le hoodie cadré serré. */
   hoodie: string;
+  /** Image d'arrivée : le macro du molleton. */
   fabric: string;
-  model: string;
 }
 
-/** Plages de progression (0→1) des trois actes. */
-export interface Acts {
-  zoomIn: [number, number];
-  zoomOut: [number, number];
-  reveal: [number, number];
-}
-
+/** Plages de progression (0→1) sur lesquelles chaque bloc de texte est visible. */
 export type Chapters = Record<string, [number, number]>;
 
 export interface ScrollHeroOptions {
@@ -62,12 +54,6 @@ export interface ScrollHeroOptions {
   frames?: FrameSet;
   /** Séquence 9:16 utilisée sous 768 px. */
   mobileFrames?: FrameSet;
-  /**
-   * Image de révélation utilisée en mode `frames` quand le clip B manque :
-   * elle est fondue par-dessus la dernière frame du clip A.
-   */
-  revealImage?: string;
-  acts?: Acts;
   chapters?: Chapters;
   /** Inertie du scroll : 0 = brut, 1 = figé. */
   smoothing?: number;
@@ -78,26 +64,18 @@ export interface ScrollHeroOptions {
   onProgress?: (progress: number) => void;
 }
 
-const DEFAULT_ACTS: Acts = {
-  zoomIn: [0.0, 0.38],
-  zoomOut: [0.38, 0.62],
-  reveal: [0.62, 1.0],
-};
-
 const DEFAULT_CHAPTERS: Chapters = {
-  intro: [0.0, 0.12],
-  texture: [0.3, 0.55],
-  reveal: [0.8, 1.01],
+  intro: [0.0, 0.14],
+  texture: [0.3, 0.62],
+  outro: [0.74, 1.01],
 };
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 
-/** Grossissement du hoodie au moment où la macro tissu prend le relais. */
+/** Grossissement du hoodie au moment où le macro tissu prend le relais. */
 const ZOOM_MAX = 3.2;
-
-type FrameKey = readonly ['a' | 'b', number];
 
 /** Promesse d'image qui mémorise son résultat pour un accès synchrone au rendu. */
 type PendingImage = Promise<HTMLImageElement | null> & { settled?: HTMLImageElement | null };
@@ -108,7 +86,7 @@ export class ScrollHero {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
   private readonly opts: Required<
-    Pick<ScrollHeroOptions, 'mode' | 'acts' | 'chapters' | 'smoothing' | 'maxDpr' | 'preloadAhead'>
+    Pick<ScrollHeroOptions, 'mode' | 'chapters' | 'smoothing' | 'maxDpr' | 'preloadAhead'>
   > &
     ScrollHeroOptions;
 
@@ -126,15 +104,10 @@ export class ScrollHero {
   // mode keyframes
   private kHoodie: HTMLImageElement | null = null;
   private kFabric: HTMLImageElement | null = null;
-  private kModel: HTMLImageElement | null = null;
 
   // mode frames
-  private timeline: FrameKey[] = [];
-  private cache = new Map<string, PendingImage>();
+  private cache = new Map<number, PendingImage>();
   private frameSet: FrameSet | null = null;
-  /** Image de révélation, et fin de la plage couverte par la séquence. */
-  private revealImg: HTMLImageElement | null = null;
-  private framesCover = 1;
 
   constructor(root: HTMLElement, options: ScrollHeroOptions = {}) {
     const sticky = root.querySelector<HTMLElement>('[data-hero-sticky]');
@@ -150,7 +123,6 @@ export class ScrollHero {
     this.ctx = ctx;
     this.opts = {
       mode: 'keyframes',
-      acts: DEFAULT_ACTS,
       chapters: DEFAULT_CHAPTERS,
       smoothing: 0.14,
       maxDpr: 2,
@@ -208,14 +180,9 @@ export class ScrollHero {
   private async setupKeyframes() {
     const k = this.opts.keyframes;
     if (!k) throw new Error('option `keyframes` manquante');
-    const [hoodie, fabric, model] = await Promise.all([
-      loadImage(k.hoodie),
-      loadImage(k.fabric),
-      loadImage(k.model),
-    ]);
+    const [hoodie, fabric] = await Promise.all([loadImage(k.hoodie), loadImage(k.fabric)]);
     this.kHoodie = hoodie;
     this.kFabric = fabric;
-    this.kModel = model;
     this.dirty = true;
   }
 
@@ -227,69 +194,46 @@ export class ScrollHero {
     if (!set) throw new Error('option `frames` manquante');
     this.frameSet = set;
 
-    // Timeline virtuelle : A(0..n-1), A inversé (n-2..1), puis B(0..m-1).
-    // Le retour tissu → hoodie réutilise les frames de A, il ne coûte rien.
-    const timeline: FrameKey[] = [];
-    for (let i = 0; i < set.a; i++) timeline.push(['a', i] as const);
-    for (let i = set.a - 2; i > 0; i--) timeline.push(['a', i] as const);
-    for (let i = 0; i < (set.b ?? 0); i++) timeline.push(['b', i] as const);
-    this.timeline = timeline;
-
-    // Sans clip B, la séquence s'arrête au début de la révélation ; le reste
-    // de la course est joué par le fondu sur `revealImage`.
-    this.framesCover = set.b ? 1 : this.opts.acts.reveal[0];
-    if (!set.b && this.opts.revealImage) {
-      void loadImage(this.opts.revealImage).then((img) => {
-        this.revealImg = img;
-        this.dirty = true;
-      });
-    }
-
     // Première frame bloquante, le reste en tâche de fond.
-    await this.loadFrame(timeline[0]);
+    await this.loadFrame(0);
     void this.backgroundPreload();
   }
 
-  private srcOf(key: FrameKey) {
-    return frameSrc(this.frameSet!, key[0], key[1] + 1);
-  }
-
-  private loadFrame(key: FrameKey): PendingImage {
-    const id = `${key[0]}_${key[1]}`;
-    const hit = this.cache.get(id);
+  private loadFrame(index: number): PendingImage {
+    const hit = this.cache.get(index);
     if (hit) return hit;
 
-    const pending = loadImage(this.srcOf(key)).then((img) => {
+    const pending = loadImage(frameSrc(this.frameSet!, index + 1)).then((img) => {
       pending.settled = img;
       this.dirty = true;
       return img;
     }) as PendingImage;
     pending.settled = undefined;
-    this.cache.set(id, pending);
+    this.cache.set(index, pending);
     return pending;
   }
 
   /** Vagues de préchargement : 1 frame sur 8, puis sur 4, 2, 1. */
   private async backgroundPreload() {
-    const total = this.timeline.length;
+    const total = this.frameSet?.count ?? 0;
     const seen = new Set<number>();
     for (let step = 8; step >= 1; step = step >> 1) {
       for (let i = 0; i < total; i += step) {
         if (this.disposed) return;
         if (seen.has(i)) continue;
         seen.add(i);
-        await this.loadFrame(this.timeline[i]);
+        await this.loadFrame(i);
       }
     }
   }
 
   /** Frame chargée la plus proche : évite les trous pendant le préchargement. */
   private nearestLoaded(index: number): HTMLImageElement | null {
-    for (let d = 0; d < this.timeline.length; d++) {
+    const total = this.frameSet?.count ?? 0;
+    for (let d = 0; d < total; d++) {
       for (const i of [index - d, index + d]) {
-        if (i < 0 || i >= this.timeline.length) continue;
-        const key = this.timeline[i];
-        const img = this.cache.get(`${key[0]}_${key[1]}`)?.settled;
+        if (i < 0 || i >= total) continue;
+        const img = this.cache.get(i)?.settled;
         if (img) return img;
       }
     }
@@ -356,50 +300,24 @@ export class ScrollHero {
   }
 
   private drawFrames(p: number) {
-    const total = this.timeline.length;
+    const total = this.frameSet?.count ?? 0;
     if (!total) return;
 
-    const seek = clamp(p / this.framesCover, 0, 1);
-    const index = Math.round(seek * (total - 1));
-    const key = this.timeline[index];
-    const img = this.cache.get(`${key[0]}_${key[1]}`)?.settled ?? this.nearestLoaded(index);
-
-    // Sans clip B, le troisième acte recule légèrement sur la dernière frame
-    // et fait monter l'image de révélation par-dessus.
-    const reveal = this.opts.acts.reveal;
-    const t = this.framesCover < 1
-      ? easeInOut(clamp((p - reveal[0]) / (reveal[1] - reveal[0]), 0, 1))
-      : 0;
-
-    if (img) this.cover(img, lerp(1, 0.78, t), 1);
-    if (t > 0) this.cover(this.revealImg, lerp(1.9, 1, t), clamp(t / 0.6, 0, 1));
+    const index = Math.round(clamp(p, 0, 1) * (total - 1));
+    const img = this.cache.get(index)?.settled ?? this.nearestLoaded(index);
+    if (img) this.cover(img, 1, 1);
 
     for (let d = 1; d <= this.opts.preloadAhead; d++) {
       const i = index + d;
-      if (i < total) this.loadFrame(this.timeline[i]);
+      if (i < total) this.loadFrame(i);
     }
   }
 
+  /** Approximation du travelling : le hoodie grossit, le tissu monte en fondu. */
   private drawKeyframes(p: number) {
-    const { zoomIn, zoomOut, reveal } = this.opts.acts;
-    const seg = (r: [number, number]) => easeInOut(clamp((p - r[0]) / (r[1] - r[0]), 0, 1));
-
-    if (p < zoomOut[0]) {
-      // Acte 1 : le hoodie s'ouvre jusqu'au tissu.
-      const t = seg(zoomIn);
-      this.cover(this.kHoodie, lerp(1, ZOOM_MAX, t), 1);
-      this.cover(this.kFabric, lerp(1.6, 1, t), clamp((t - 0.55) / 0.45, 0, 1));
-    } else if (p < reveal[0]) {
-      // Acte 2 : retour exact du tissu vers le hoodie.
-      const t = 1 - seg(zoomOut);
-      this.cover(this.kHoodie, lerp(1, ZOOM_MAX, t), 1);
-      this.cover(this.kFabric, lerp(1.6, 1, t), clamp((t - 0.55) / 0.45, 0, 1));
-    } else {
-      // Acte 3 : le cadre s'ouvre sur le mannequin.
-      const t = seg(reveal);
-      this.cover(this.kHoodie, lerp(1, 0.78, t), 1);
-      this.cover(this.kModel, lerp(1.9, 1, t), clamp(t / 0.6, 0, 1));
-    }
+    const t = easeInOut(clamp(p, 0, 1));
+    this.cover(this.kHoodie, lerp(1, ZOOM_MAX, t), 1);
+    this.cover(this.kFabric, lerp(1.6, 1, t), clamp((t - 0.55) / 0.45, 0, 1));
   }
 
   /** Dessine une image en object-fit: cover, centrée, avec zoom et opacité. */

@@ -1,51 +1,36 @@
 #!/usr/bin/env bash
 #
-# Extrait les frames des clips du hero en WebP, calibrés pour le scroll-scrub.
+# Extrait les frames du clip du hero en WebP, calibrées pour le scroll-scrub.
 #
-#   ./scripts/extract-frames.sh clipA.mp4 [clipB.mp4] public/hero/frames/16x9 [largeur] [fps]
+#   ./scripts/extract-frames.sh clip.mp4 public/hero/frames/16x9 [largeur] [fps]
 #
-#   clipA : hoodie → tissu   (push-in)
-#   clipB : hoodie → mannequin (pull-out) — facultatif
-#
-# Le dézoom tissu → hoodie réutilise les frames de A à l'envers : il n'y a rien
-# à extraire pour lui. Tant que clipB manque, la révélation est jouée en fondu
-# depuis l'image clé `HERO_KEYFRAMES.model`.
-#
-# Reporter les nombres affichés à la fin dans `src/config/hero.ts`.
+# Le hero joue un seul mouvement : un travelling avant du hoodie vers le macro
+# du molleton. Reporter le nombre affiché à la fin dans `src/config/hero.ts`,
+# champ `HERO_FRAMES.count`.
 set -euo pipefail
 
-usage() { sed -n '2,14p' "$0"; exit 1; }
+usage() { sed -n '2,10p' "$0"; exit 1; }
 [ $# -ge 2 ] || usage
 
-A="$1"; shift
-B=""
-case "$1" in
-  *.mp4|*.mov|*.webm|*.MP4|*.MOV|*.WEBM) B="$1"; shift ;;
-esac
-OUT="$1"; shift
-W="${1:-1600}"
-FPS="${2:-24}"
+SRC="$1"
+OUT="$2"
+W="${3:-1600}"
+FPS="${4:-24}"
 
 command -v ffmpeg >/dev/null || { echo "ffmpeg est requis." >&2; exit 1; }
+[ -f "$SRC" ] || { echo "Fichier introuvable : $SRC" >&2; exit 1; }
+
 mkdir -p "$OUT"
+rm -f "$OUT"/a_*.webp
 
-extract() {
-  local src="$1" clip="$2"
-  rm -f "$OUT/${clip}_"*.webp
-  ffmpeg -v error -y -i "$src" \
-    -vf "fps=$FPS,scale='min($W,iw)':-2:flags=lanczos" \
-    -c:v libwebp -quality 80 -compression_level 6 \
-    "$OUT/${clip}_%04d.webp"
-  echo "$(ls "$OUT/${clip}_"*.webp | wc -l)"
-}
+# `min(W,iw)` évite d'agrandir une source plus petite que la cible : cela
+# alourdirait les fichiers sans ajouter le moindre détail.
+ffmpeg -v error -y -i "$SRC" \
+  -vf "fps=$FPS,scale='min($W,iw)':-2:flags=lanczos" \
+  -c:v libwebp -quality 80 -compression_level 6 \
+  "$OUT/a_%04d.webp"
 
-NA=$(extract "$A" a)
-echo "clip A : $NA frames"
-if [ -n "$B" ]; then
-  NB=$(extract "$B" b)
-  echo "clip B : $NB frames"
-  echo "→ src/config/hero.ts : { a: $NA, b: $NB, path: '/${OUT#public/}/' }"
-else
-  echo "→ src/config/hero.ts : { a: $NA, path: '/${OUT#public/}/' }   (clip B absent)"
-fi
+COUNT=$(ls "$OUT"/a_*.webp | wc -l)
+echo "$COUNT frames extraites."
+echo "→ src/config/hero.ts : { count: $COUNT, path: '/${OUT#public/}/' }"
 du -sh "$OUT"
