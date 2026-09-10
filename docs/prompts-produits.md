@@ -1,290 +1,113 @@
-# Visuels boutique — prompts prêts à l'emploi
+# Visuels boutique — le prompt unique
 
-But : obtenir huit visuels qui semblent pris dans la même séance photo, sans
-jamais modifier le vêtement lui-même. On ne change que le fond, la lumière et
-le cadrage.
+Un seul prompt, le même pour les huit vêtements. Vous joignez la photo, vous
+collez ce texte, vous générez. C'est le fait de ne rien changer au texte d'une
+pièce à l'autre qui donne à la grille son unité.
+
+## Réglages
+
+Modèle **GPT Image 2**. Format **3:4** vertical. Résolution **1k**, qualité
+**medium** : 1 crédit par image, largement suffisant pour des vignettes de
+boutique. Le 2k haute qualité coûte 6,5 crédits pour un gain invisible à cette
+taille.
+
+Une seule photo de référence par génération. Pas besoin de recadrer : le prompt
+dit lui-même quoi faire quand la photo montre plusieurs vêtements.
+
+Le prompt est en anglais. Les modèles d'image comprennent nettement mieux les
+consignes de cadrage et de lumière dans cette langue. Le résultat ne contient
+aucun texte en dehors de celui déjà imprimé sur le vêtement.
 
 ---
 
-## Avant de lancer
+## Le prompt
 
-**Réglages.** Modèle `GPT Image 2`. Format **3:4** (vertical). Résolution **1k**,
-qualité **medium** : cela coûte 1 crédit par image et suffit largement pour des
-vignettes de boutique. Le 2k haute qualité coûte 6,5 crédits pour un gain
-invisible à cette taille.
+```
+Use the attached photo as the reference. Keep the garment exactly as it is and place it in
+a new studio setting.
 
-**Une seule image de référence par génération.** Joignez la photo du vêtement
-concerné, rien d'autre.
+KEEP ONE GARMENT ONLY. If the photo shows several garments, keep a single one and remove
+the others completely from the image. Keep the garment seen from the FRONT, the one showing
+the print on the chest, and ignore any garment showing its back. If several front-facing
+garments in different colours are shown, keep the one that appears largest and closest to
+the camera.
 
-**Recadrez d'abord si votre photo montre plusieurs vêtements.** Vos visuels
-présentent souvent deux ou trois pièces côte à côte, ou le devant et le dos.
-Le prompt demande d'ignorer les autres, mais un recadrage sur une seule pièce
-donne un résultat nettement plus fiable. C'est trente secondes sur le téléphone
-et cela évite de brûler des crédits pour rien.
+DO NOT REDESIGN THE GARMENT. Reproduce it exactly: same cut, same length, same sleeves,
+same neckline, same collar or hood, same pockets, same colour, same wash or dye pattern,
+same fabric and knit. The print must be identical to the reference: same wording, same
+typefaces, same colours, same size, same position on the chest. Do not add, remove,
+translate, re-typeset, move, resize or restyle any lettering or artwork. Change ONLY the
+background, the lighting and the framing.
 
-**Les prompts sont en anglais.** Les modèles d'image comprennent beaucoup mieux
-les consignes de cadrage et de lumière en anglais. Le résultat, lui, ne contient
-aucun texte à part celui déjà imprimé sur le vêtement.
+SETTING, identical for every garment: studio product photograph. Seamless dark charcoal
+background, a deep neutral grey-black, smooth subtle vertical gradient, no floor line, no
+horizon, no surface, no props. The garment is centred and shown straight-on, front view,
+floating on an invisible ghost mannequin so it keeps its natural shape and volume. Soft
+broad key light from the top left, a distinct rim light along both shoulders and sleeves so
+dark garments separate from the dark background, soft contact shadow under the hem. Even
+margins on all four sides, the garment filling about 80% of the frame height. Sharp fabric
+texture, premium catalogue look, photorealistic. Vertical 3:4 framing. No text anywhere
+except the print already on the garment. No watermark, no username, no added logo.
+```
 
-**Prompt négatif, le même pour les huit.** Collez-le dans le champ prévu si
-l'interface le propose :
+## Le prompt négatif
+
+Le même pour les huit, à coller dans le champ prévu si l'interface le propose.
 
 ```
 person, model, face, hands, body, hanger, clothes rack, visible mannequin, flat lay,
-folded garment, second garment, extra clothing, back view, changed text, altered
-lettering, new logo, added slogan, watermark, username, social media handle, price tag,
-white background, seamless white studio, floor line, horizon, props, blurry, low quality,
+folded garment, second garment, extra clothing, back view, changed text, altered lettering,
+new logo, added slogan, watermark, username, social media handle, price tag, white
+background, seamless white studio, floor line, horizon, props, blurry, low quality,
 distorted typography
 ```
 
----
+## La seule ligne à ajouter parfois
 
-## 1. Pull MAN OF GOD
+Deux de vos photos montrent la même pièce en plusieurs couleurs : le top manches
+courtes en noir et blanc, le top manches longues en noir, rose et blanc. La règle
+du prompt garde alors celui qui est le plus grand dans le cadre, ce qui n'est pas
+forcément celui que vous voulez.
 
-Fichier attendu : `pull-man-of-god.png`
-
-```
-Reproduce the garment from the reference image exactly as it is, and place it in a new
-studio setting.
-
-DO NOT REDESIGN THE GARMENT. Same cut, same length, same sleeves, same hood, same pocket,
-same colour, same fabric. The chest print must be identical to the reference: same wording,
-same typefaces, same colours, same size, same position on the chest. Do not add, remove,
-translate, re-typeset or restyle any lettering. Change ONLY the background, the lighting
-and the framing.
-
-SETTING: studio product photograph. Seamless dark charcoal background, a deep neutral
-grey-black, smooth subtle vertical gradient, no floor line, no horizon, no props. The
-garment is centred and shown straight-on, front view, floating on an invisible ghost
-mannequin so it keeps its natural shape and volume. Soft broad key light from the top
-left, a distinct rim light along both shoulders and sleeves so the dark fabric separates
-from the dark background, soft contact shadow under the hem. Even margins on all four
-sides. Sharp fabric texture, premium catalogue look, photorealistic. Vertical 3:4 framing.
-No text anywhere except the print already on the garment. No watermark.
-```
-
----
-
-## 2. Pull WOMAN OF GOD
-
-Fichier attendu : `pull-woman-of-god.png`
+Pour trancher, ajoutez une phrase à la fin du prompt :
 
 ```
-Reproduce the garment from the reference image exactly as it is, and place it in a new
-studio setting.
-
-DO NOT REDESIGN THE GARMENT. Same cut, same length, same sleeves, same hood, same pocket,
-same colour, same fabric. The chest print must be identical to the reference: same wording,
-same typefaces, same colours, same size, same position on the chest. Do not add, remove,
-translate, re-typeset or restyle any lettering. Change ONLY the background, the lighting
-and the framing.
-
-SETTING: studio product photograph. Seamless dark charcoal background, a deep neutral
-grey-black, smooth subtle vertical gradient, no floor line, no horizon, no props. The
-garment is centred and shown straight-on, front view, floating on an invisible ghost
-mannequin so it keeps its natural shape and volume. Soft broad key light from the top
-left, a distinct rim light along both shoulders and sleeves so the dark fabric separates
-from the dark background, soft contact shadow under the hem. Even margins on all four
-sides. Sharp fabric texture, premium catalogue look, photorealistic. Vertical 3:4 framing.
-No text anywhere except the print already on the garment. No watermark.
-```
-
----
-
-## 3. T-shirt délavé MAN OF GOD (taupe)
-
-Recadrez sur le t-shirt de **devant** uniquement, celui qui porte la petite croix
-et le logotype sur la poitrine.
-
-Fichier attendu : `tshirt-delave-man-of-god.png`
-
-```
-Reproduce the garment from the reference image exactly as it is, and place it in a new
-studio setting. Use ONLY the front-facing t-shirt with the small chest print; ignore any
-other garment visible in the reference.
-
-DO NOT REDESIGN THE GARMENT. Same oversized cut, same drop shoulders, same sleeve length,
-same neckline, same warm taupe acid-wash colour and its exact mottled wash pattern, same
-heavy cotton. The chest print must be identical to the reference: same small cross, same
-wording, same typefaces, same colours, same size, same position high on the chest. Do not
-add, remove, translate, re-typeset or restyle any lettering. Change ONLY the background,
-the lighting and the framing.
-
-SETTING: studio product photograph. Seamless dark charcoal background, a deep neutral
-grey-black, smooth subtle vertical gradient, no floor line, no horizon, no props. The
-garment is centred and shown straight-on, front view, floating on an invisible ghost
-mannequin so it keeps its natural shape and volume. Soft broad key light from the top
-left, a distinct rim light along both shoulders and sleeves, soft contact shadow under
-the hem. Even margins on all four sides. Sharp washed-cotton texture, premium catalogue
-look, photorealistic. Vertical 3:4 framing. No text anywhere except the print already on
-the garment. No watermark.
-```
-
----
-
-## 4. T-shirt délavé WOMAN OF GOD (gris)
-
-Recadrez sur le t-shirt de **devant**, celui qui porte « WOMAN of GOD » sur la
-poitrine, et non celui qui montre les trois croix au dos.
-
-Fichier attendu : `tshirt-delave-woman-of-god.png`
-
-```
-Reproduce the garment from the reference image exactly as it is, and place it in a new
-studio setting. Use ONLY the front-facing t-shirt with the chest print; ignore the
-back-facing garment visible in the reference.
-
-DO NOT REDESIGN THE GARMENT. Same oversized cut, same drop shoulders, same sleeve length,
-same neckline, same light grey acid-wash colour and its exact mottled wash pattern, same
-heavy cotton. The chest print must be identical to the reference: same wording, same
-typefaces, same colours, same size, same position on the chest. Do not add, remove,
-translate, re-typeset or restyle any lettering. Change ONLY the background, the lighting
-and the framing.
-
-SETTING: studio product photograph. Seamless dark charcoal background, a deep neutral
-grey-black, smooth subtle vertical gradient, no floor line, no horizon, no props. The
-garment is centred and shown straight-on, front view, floating on an invisible ghost
-mannequin so it keeps its natural shape and volume. Soft broad key light from the top
-left, a distinct rim light along both shoulders and sleeves, soft contact shadow under
-the hem. Even margins on all four sides. Sharp washed-cotton texture, premium catalogue
-look, photorealistic. Vertical 3:4 framing. No text anywhere except the print already on
-the garment. No watermark.
-```
-
----
-
-## 5. T-shirt WOMAN OF GOD (blanc)
-
-Recadrez sur le t-shirt de **devant**, celui qui porte le petit logotype sur la
-poitrine.
-
-Fichier attendu : `tshirt-woman-of-god.png`
-
-```
-Reproduce the garment from the reference image exactly as it is, and place it in a new
-studio setting. Use ONLY the front-facing t-shirt with the small chest print; ignore the
-back-facing garment visible in the reference.
-
-DO NOT REDESIGN THE GARMENT. Same cut, same sleeve length, same neckline, same pure white
-colour, same cotton. The chest print must be identical to the reference: same wording,
-same typefaces, same colours, same small size, same position high on the chest. Do not
-add, remove, translate, re-typeset or restyle any lettering. Change ONLY the background,
-the lighting and the framing.
-
-SETTING: studio product photograph. Seamless dark charcoal background, a deep neutral
-grey-black, smooth subtle vertical gradient, no floor line, no horizon, no props, so the
-white fabric stands out cleanly. The garment is centred and shown straight-on, front view,
-floating on an invisible ghost mannequin so it keeps its natural shape and volume. Soft
-broad key light from the top left, gentle rim light along both shoulders, soft contact
-shadow under the hem. Even margins on all four sides. Sharp cotton texture, premium
-catalogue look, photorealistic. Vertical 3:4 framing. No text anywhere except the print
-already on the garment. No watermark.
-```
-
----
-
-## 6. T-shirt MAN OF GOD (blanc)
-
-Recadrez sur le t-shirt de **devant**, celui qui porte le logotype sur la
-poitrine.
-
-Fichier attendu : `tshirt-man-of-god.png`
-
-```
-Reproduce the garment from the reference image exactly as it is, and place it in a new
-studio setting. Use ONLY the front-facing t-shirt with the chest print; ignore any other
-garment or person visible in the reference.
-
-DO NOT REDESIGN THE GARMENT. Same oversized cut, same drop shoulders, same sleeve length,
-same neckline, same pure white colour, same cotton. The chest print must be identical to
-the reference: same wording, same typefaces, same colours, same size, same position on the
-chest. Do not add, remove, translate, re-typeset or restyle any lettering. Change ONLY the
-background, the lighting and the framing.
-
-SETTING: studio product photograph. Seamless dark charcoal background, a deep neutral
-grey-black, smooth subtle vertical gradient, no floor line, no horizon, no props, so the
-white fabric stands out cleanly. The garment is centred and shown straight-on, front view,
-floating on an invisible ghost mannequin so it keeps its natural shape and volume. Soft
-broad key light from the top left, gentle rim light along both shoulders, soft contact
-shadow under the hem. Even margins on all four sides. Sharp cotton texture, premium
-catalogue look, photorealistic. Vertical 3:4 framing. No text anywhere except the print
-already on the garment. No watermark.
-```
-
----
-
-## 7. Top WOMAN OF GOD manches courtes
-
-Votre photo montre le noir et le blanc côte à côte. Recadrez sur **le noir**.
-
-Fichier attendu : `top-woman-of-god-manches-courtes.png`
-
-```
-Reproduce the garment from the reference image exactly as it is, and place it in a new
-studio setting. Use ONLY the black short-sleeve top; ignore the white one visible in the
-reference.
-
-DO NOT REDESIGN THE GARMENT. Same slim fitted cut, same cropped length, same short sleeves,
-same crew neckline, same black colour, same ribbed knit. The chest print must be identical
-to the reference: same wording, same typefaces, same colours, same small size, same
-position high on the chest. Do not add, remove, translate, re-typeset or restyle any
-lettering. Change ONLY the background, the lighting and the framing.
-
-SETTING: studio product photograph. Seamless dark charcoal background, a deep neutral
-grey-black, smooth subtle vertical gradient, no floor line, no horizon, no props. The
-garment is centred and shown straight-on, front view, floating on an invisible ghost
-mannequin so it keeps its slim shape. Soft broad key light from the top left, a distinct
-rim light along both shoulders and sleeves so the black fabric separates from the dark
-background, soft contact shadow under the hem. Even margins on all four sides. Sharp
-ribbed knit texture, premium catalogue look, photorealistic. Vertical 3:4 framing. No text
-anywhere except the print already on the garment. No watermark.
-```
-
----
-
-## 8. Top WOMAN OF GOD manches longues
-
-Votre photo montre le noir, le rose et le blanc. Recadrez sur **le noir**.
-
-Fichier attendu : `top-woman-of-god-manches-longues.png`
-
-```
-Reproduce the garment from the reference image exactly as it is, and place it in a new
-studio setting. Use ONLY the black long-sleeve top; ignore the pink and white ones visible
-in the reference.
-
-DO NOT REDESIGN THE GARMENT. Same slim fitted cut, same cropped length, same long fitted
-sleeves, same crew neckline, same black colour, same ribbed knit. The chest print must be
-identical to the reference: same wording, same typefaces, same colours, same small size,
-same position high on the chest. Do not add, remove, translate, re-typeset or restyle any
-lettering. Change ONLY the background, the lighting and the framing.
-
-SETTING: studio product photograph. Seamless dark charcoal background, a deep neutral
-grey-black, smooth subtle vertical gradient, no floor line, no horizon, no props. The
-garment is centred and shown straight-on, front view, floating on an invisible ghost
-mannequin so it keeps its slim shape. Soft broad key light from the top left, a distinct
-rim light along both shoulders and sleeves so the black fabric separates from the dark
-background, soft contact shadow under the hem. Even margins on all four sides. Sharp
-ribbed knit texture, premium catalogue look, photorealistic. Vertical 3:4 framing. No text
-anywhere except the print already on the garment. No watermark.
+Keep only the black one.
 ```
 
 ---
 
 ## Vérifier avant de valider
 
-Passez chaque image sur ces cinq points. C'est plus rapide que de tout refaire
-plus tard.
+Cinq points, plus rapides à contrôler maintenant qu'à rattraper plus tard.
 
-1. Le texte imprimé est exactement le même, lettre pour lettre. Un modèle
-   d'image aime réécrire les mots : c'est le défaut le plus fréquent.
-2. Le « of » manuscrit rouge est toujours là, à sa place et de la bonne taille.
-3. La coupe n'a pas changé : un top ajusté ne doit pas être devenu ample.
-4. Le fond est bien charbon, sans ligne de sol ni ombre portée bizarre.
+1. Le texte imprimé est identique, lettre pour lettre. Un modèle d'image aime
+   réécrire les mots : c'est le défaut le plus fréquent.
+2. Le « of » manuscrit rouge est là, à sa place et à sa taille.
+3. La coupe n'a pas bougé : un top ajusté ne doit pas être devenu ample.
+4. Le fond est bien charbon, sans ligne de sol ni ombre portée étrange.
 5. Aucun pseudo TikTok, aucun filigrane.
 
 Si un point cloche, relancez la même image. Deux ou trois essais par vêtement
 sont normaux, cela reste 1 crédit à chaque fois.
+
+---
+
+## Nommer les fichiers
+
+Ces noms exacts me permettent de brancher le catalogue sans deviner quelle image
+correspond à quelle pièce.
+
+| Vêtement | Nom du fichier |
+|---|---|
+| Pull MAN OF GOD | `pull-man-of-god.png` |
+| Pull WOMAN OF GOD | `pull-woman-of-god.png` |
+| T-shirt délavé MAN OF GOD, taupe | `tshirt-delave-man-of-god.png` |
+| T-shirt délavé WOMAN OF GOD, gris | `tshirt-delave-woman-of-god.png` |
+| T-shirt WOMAN OF GOD, blanc | `tshirt-woman-of-god.png` |
+| T-shirt MAN OF GOD, blanc | `tshirt-man-of-god.png` |
+| Top WOMAN OF GOD manches courtes | `top-woman-of-god-manches-courtes.png` |
+| Top WOMAN OF GOD manches longues | `top-woman-of-god-manches-longues.png` |
 
 ---
 
@@ -294,19 +117,12 @@ Plusieurs pièces portent un visuel au dos, notamment les trois croix du Calvair
 et le verset des t-shirts délavés. Elles méritent une seconde image, que la
 boutique pourra montrer au survol de la carte.
 
-Reprenez le prompt de la pièce concernée et remplacez, dans le bloc SETTING,
-`front view` par `back view`, puis ajustez la ligne de fidélité pour parler du
-dos plutôt que de la poitrine :
+Reprenez le même prompt et changez deux choses : dans le bloc de sélection,
+remplacez `Keep the garment seen from the FRONT, the one showing the print on the
+chest, and ignore any garment showing its back` par `Keep the garment seen from
+the BACK, the one showing the print on the back, and ignore any garment showing
+its front`. Dans le bloc de décor, remplacez `front view` par `back view`.
 
-> The back print must be identical to the reference: same artwork, same size,
-> same position. Do not redraw it.
-
-Dites-le-moi si vous les faites, j'ajouterai le second visuel aux cartes.
-
----
-
-## Me les envoyer
-
-Nommez les fichiers exactement comme indiqué sous chaque prompt. Avec ces noms,
-je les dépose dans `public/products/` et je bascule le catalogue en une
-opération, sans avoir à deviner quelle image correspond à quelle pièce.
+Nommez ces fichiers avec le suffixe `-dos`, par exemple
+`tshirt-delave-man-of-god-dos.png`. Dites-le-moi si vous les faites, j'ajouterai
+le second visuel au survol des cartes.
