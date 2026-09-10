@@ -5,8 +5,9 @@
  * de fond commune : la grille tient comme une seule série sans qu'aucun vêtement
  * n'ait été redessiné. Ils vivent dans `public/products/`, nommés d'après le slug.
  *
- * Trois pièces attendent encore leur composition et gardent leur visuel généré,
- * servi depuis le CDN Higgsfield. Avant la mise en ligne, `node
+ * Trois pièces attendent encore leur composition. Leur visuel est généré à
+ * partir de la vraie photo du vêtement et de la planche composée prise comme
+ * référence de décor, et servi depuis le CDN Higgsfield. Avant la mise en ligne, `node
  * scripts/localise-products.mjs` les rapatrie dans `public/products/` et réécrit
  * ce fichier : le catalogue ne doit pas dépendre d'un service tiers.
  *
@@ -71,7 +72,7 @@ export const PRODUCTS: Product[] = [
     detail: 'Les trois croix du Calvaire au dos',
     colors: [COLORS.black, COLORS.grey, COLORS.white],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161206_cf664aa9-89d8-4836-9869-ff606b580d7d.png`,
+    image: `${CDN}/hf_20260910_195921_dc227150-4b6e-4779-95d9-c7f6306b9756.png`,
     alt: 'Pull à capuche noir MAN OF GOD, sérigraphie blanche et rouge sur la poitrine',
   },
   {
@@ -83,7 +84,7 @@ export const PRODUCTS: Product[] = [
     detail: 'Les trois croix du Calvaire au dos',
     colors: [COLORS.black, COLORS.grey, COLORS.white],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161256_70eae80f-abdb-487c-a547-a3535f7c0ee7.png`,
+    image: `${CDN}/hf_20260910_195921_a88ea69d-ab89-47b3-99e2-a3ebed39eff2.png`,
     alt: 'Pull à capuche noir WOMAN OF GOD, sérigraphie blanche et rouge sur la poitrine',
   },
   {
@@ -143,8 +144,8 @@ export const PRODUCTS: Product[] = [
     detail: 'Les trois croix du Calvaire au dos',
     colors: [COLORS.white, COLORS.black],
     sizes: SIZES,
-    image: `${CDN}/hf_20260910_161206_80d4ef33-741a-412c-b135-97a03188ca02.png`,
-    alt: 'T-shirt oversize blanc MAN OF GOD, petit logotype noir sur la poitrine',
+    image: `${CDN}/hf_20260910_195921_1a99a798-2477-4b52-9dfd-1722b2a23781.png`,
+    alt: 'T-shirt oversize blanc MAN OF GOD, vu de face et de dos',
   },
   {
     slug: 'top-woman-of-god-manches-courtes',

@@ -110,3 +110,21 @@ bannière. Deux crédits par format, dites-le-moi et je les génère.
 Une fois vos huit images prêtes, envoyez-les-moi : je les dépose dans le projet,
 je mets à jour les descriptions des cartes pour mentionner les coloris visibles,
 et la boutique tourne sur vos vrais visuels.
+
+---
+
+## Les trois pièces sans composition
+
+Les pulls MAN OF GOD et WOMAN OF GOD, et le t-shirt blanc MAN OF GOD, n'ont pas
+encore de composition Canva. Leur visuel est généré, mais avec deux références
+plutôt qu'une description : la vraie photo du vêtement, et l'une de vos planches
+composées prise comme référence de décor. Le fond, la lumière et l'échelle
+suivent donc les vôtres.
+
+Le pull WOMAN OF GOD est le seul cas où la sérigraphie est déduite : aucune photo
+du vrai pull femme ne m'a été fournie, le lettrage part donc du pull homme en
+remplaçant MAN par WOMAN. Une photo du vrai pull femme corrigerait cela.
+
+Dès que vous composez ces trois pièces sous Canva, elles remplacent les
+générations : déposez les fichiers dans `public/products/` avec les noms du
+tableau ci-dessus et je bascule le catalogue.
