@@ -11,7 +11,7 @@ export default function Order() {
         </h2>
         <p>
           Écrivez-nous sur WhatsApp ou appelez directement. Nous confirmons la taille, la couleur et
-          la livraison dans la foulée. Paiement à la livraison sur {SITE.city}.
+          la livraison dans la foulée. Paiement à la livraison à {SITE.city}.
         </p>
         <div className={styles.actions}>
           <a className="button button--solid" href={orderLink()} target="_blank" rel="noreferrer">

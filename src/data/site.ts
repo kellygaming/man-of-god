@@ -10,7 +10,8 @@ export const SITE = {
   whatsapp: '2250101019747',
   tiktok: 'https://www.tiktok.com/@aura_brand.civ',
   tiktokHandle: '@aura_brand.civ',
-  city: 'Abidjan, Côte d’Ivoire',
+  city: 'Abidjan',
+  country: 'Côte d’Ivoire',
 } as const;
 
 /** Lien de commande WhatsApp pré-rempli avec le produit choisi. */

@@ -83,22 +83,55 @@ Tous dans `src/components/ScrollHero/` :
 
 ```
 src/
-├── app/                    layout, page, styles globaux, favicon
+├── app/
+│   ├── page.tsx            accueil : hero, aperçu collection, matière, commande
+│   └── boutique/           la boutique complète
 ├── components/
 │   ├── ScrollHero/         moteur canvas, composant React, styles
 │   ├── Wordmark.tsx        logotype MAN / of / GOD, source unique
+│   ├── shop/               carte produit et grille filtrable
 │   └── sections/           collection, matière, commande, pied de page
 ├── config/hero.ts          images clés, séquence, mode de rendu
-└── data/                   produits et informations de contact
+└── data/                   produits, prix et informations de contact
 ```
+
+## La boutique
+
+`/boutique` liste tout le catalogue, filtrable par ligne (MOG, WOG) et par pièce
+(pulls, t-shirts, tops). L'accueil n'en montre que quatre pièces et renvoie vers
+la page complète. La carte produit est partagée entre les deux, il n'y a donc
+qu'un seul endroit à modifier.
+
+Le catalogue vit dans `src/data/products.ts` : prix, couleurs, tailles, visuel et
+texte alternatif. L'offre « deux tops pour 11 000 FCFA » est décrite une fois dans
+`TOP_BUNDLE` et reprise partout où elle s'affiche.
+
+| Pièce | Prix |
+|---|---|
+| Pulls MOG et WOG | 15 000 FCFA |
+| T-shirts MOG et WOG | 8 000 FCFA |
+| Tops | 6 000 FCFA, deux pour 11 000 FCFA |
+
+### Visuels produit
+
+Ils sont générés sur Higgsfield avec un cadrage unique — pièce seule, de face,
+fond charbon, même lumière — pour que la grille tienne comme une seule série.
+Le fond est charbon plutôt que noir pur, sinon les pièces noires disparaîtraient.
+
+Ils sont servis depuis le CDN Higgsfield le temps de la maquette. Avant la mise
+en ligne, une commande les rapatrie et réécrit le catalogue :
+
+```bash
+node scripts/localise-products.mjs
+```
+
+Il reste ensuite à retirer `remotePatterns` de `next.config.mjs`.
 
 ## À compléter
 
-- Reprise du clip en 1080p, et sa déclinaison 9:16 pour le mobile.
-- Prix des t-shirts. Le champ `priceXof` vaut `null` dans
-  `src/data/products.ts`, ce qui affiche « prix sur demande ».
-- Photos produit dans `public/products/`, qui remplaceront l'aperçu
-  typographique des cartes.
+- Reprise du clip du hero en 1080p, et sa déclinaison 9:16 pour le mobile.
+- Rapatrier les visuels produit et les images clés, puis couper la dépendance
+  au CDN Higgsfield.
 - Polices de la marque, si elles diffèrent de Montserrat et Great Vibes.
 - Paiement en ligne : Wave, Orange Money et MTN via CinetPay ou Paystack.
   Aujourd'hui la commande passe par WhatsApp et par téléphone.

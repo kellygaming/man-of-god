@@ -42,6 +42,7 @@ export default function Hero({ options }: ScrollHeroProps) {
               <Wordmark top="Man" bottom="God" inline />
             </a>
             <ul className={styles.navLinks}>
+              <li><a href="/boutique">Boutique</a></li>
               <li><a href="#collection">Collection</a></li>
               <li><a href="#matiere">La matière</a></li>
               <li><a href="#commander">Commander</a></li>

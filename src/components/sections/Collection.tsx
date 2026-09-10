@@ -1,7 +1,20 @@
-import { PRODUCTS, formatPrice } from '@/data/products';
-import { orderLink } from '@/data/site';
-import Wordmark from '@/components/Wordmark';
+import Link from 'next/link';
+import ProductCard from '@/components/shop/ProductCard';
+import shopStyles from '@/components/shop/shop.module.css';
+import { PRODUCTS } from '@/data/products';
 import styles from './sections.module.css';
+
+/** Aperçu de la collection sur l'accueil : quatre pièces, puis la boutique. */
+const PREVIEW_SLUGS = [
+  'pull-man-of-god',
+  'pull-woman-of-god',
+  'tshirt-delave-man-of-god',
+  'top-woman-of-god-manches-longues',
+];
+
+const PREVIEW = PREVIEW_SLUGS.map((slug) => PRODUCTS.find((p) => p.slug === slug)).filter(
+  (p): p is NonNullable<typeof p> => Boolean(p),
+);
 
 export default function Collection() {
   return (
@@ -13,45 +26,25 @@ export default function Collection() {
             <h2>La collection</h2>
           </div>
           <p>
-            Quatre pièces, deux lignes. Disponibles en blanc, gris et noir, de la taille S au XXL.
-            Livraison partout à Abidjan.
+            Pulls, t-shirts et tops, du S au XXL. Livraison partout à Abidjan, paiement à la
+            livraison.
           </p>
         </header>
 
-        <ul className={styles.grid}>
-          {PRODUCTS.map((product) => (
-              <li key={product.slug} className={styles.card}>
-                <div className={styles.thumb}>
-                  <span className={styles.badge}>{product.line}</span>
-                  <Wordmark className={styles.thumbText} top={product.wordmarkTop} />
-                </div>
-                <div className={styles.body}>
-                  <h3>{product.name}</h3>
-                  <p className={styles.meta}>Dos : {product.back}</p>
-                  <ul className={styles.swatches} aria-label="Couleurs disponibles">
-                    {product.colors.map((color) => (
-                      <li
-                        key={color.name}
-                        className={styles.swatch}
-                        style={{ background: color.hex }}
-                        title={color.name}
-                      />
-                    ))}
-                    <li className={styles.meta}>{product.sizes.join(' · ')}</li>
-                  </ul>
-                  <p className={styles.price}>{formatPrice(product.priceXof)}</p>
-                  <a
-                    className={`button ${styles.cardCta}`}
-                    href={orderLink(product.name)}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Commander
-                  </a>
-                </div>
-              </li>
+        <ul className={shopStyles.grid}>
+          {PREVIEW.map((product) => (
+            <ProductCard key={product.slug} product={product} />
           ))}
         </ul>
+
+        <div className={styles.more}>
+          <Link className="button" href="/boutique">
+            Voir toute la boutique
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </Link>
+        </div>
       </div>
     </section>
   );
