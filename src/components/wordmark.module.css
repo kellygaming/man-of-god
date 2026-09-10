@@ -1,0 +1,36 @@
+/* Logotype : le « of » manuscrit rouge déborde sous le mot du haut. */
+.stack {
+  display: inline-grid;
+  justify-items: start;
+  line-height: 0.86;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Le mot du haut est décalé de la largeur du « of », comme sur le vêtement. */
+.top { padding-left: 0.62em; }
+
+.bottomRow { display: inline-flex; align-items: baseline; gap: 0.06em; }
+
+.of {
+  font-family: var(--font-script), "Brush Script MT", cursive;
+  font-style: normal;
+  font-weight: 400;
+  color: var(--red);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.86em;
+  line-height: 0;
+}
+
+.bottom { display: inline-block; }
+
+.inline {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.28em;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.inline .of { font-size: 1.7em; }

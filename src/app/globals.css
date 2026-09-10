@@ -1,0 +1,97 @@
+/* ==========================================================================
+   MAN OF GOD — jetons de design
+   Noir profond, charbon, blanc cassé, rouge signature repris des vêtements.
+   ========================================================================== */
+:root {
+  --black: #0a0a0a;
+  --charcoal: #161616;
+  --line: rgba(244, 242, 238, 0.1);
+  --smoke: #8a8a8a;
+  --ivory: #f4f2ee;
+  --red: #c8102e;
+
+  --font-display: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  --font-script: var(--font-script), "Brush Script MT", cursive;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --gutter: clamp(20px, 4vw, 56px);
+  --section-y: clamp(72px, 10vw, 160px);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--black);
+  color: var(--ivory);
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+
+h1, h2, h3 { line-height: 1.05; letter-spacing: -0.02em; margin: 0; }
+
+/* Le « of » manuscrit rouge repris de la sérigraphie. */
+.script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  color: var(--red);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--smoke);
+  margin: 0;
+}
+
+.container { padding-inline: var(--gutter); max-width: 1440px; margin-inline: auto; }
+
+.section {
+  position: relative;
+  z-index: 1;
+  background: var(--black);
+  padding-block: var(--section-y);
+  border-top: 1px solid var(--line);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 26px;
+  border: 1px solid rgba(244, 242, 238, 0.35);
+  border-radius: 999px;
+  color: var(--ivory);
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease);
+}
+.button:hover { background: var(--red); border-color: var(--red); transform: translateY(-2px); }
+.button--solid { background: var(--red); border-color: var(--red); }
+.button--solid:hover { filter: brightness(1.12); }
+.button svg { width: 16px; height: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

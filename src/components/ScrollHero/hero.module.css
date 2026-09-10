@@ -1,0 +1,158 @@
+/* Le track donne au hero sa longueur de scroll ; le sticky reste à l'écran. */
+.hero {
+  position: relative;
+  height: var(--hero-track, 420vh);
+}
+@media (max-width: 767px) {
+  .hero { height: 340vh; }
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--black);
+}
+
+.canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* Vignette et grain : profondeur de campagne, et masque les artefacts IA. */
+.sticky::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.65) 100%),
+    linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 35%);
+}
+.sticky::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1.2s steps(4) infinite;
+}
+@keyframes grain {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-6%, 4%); }
+  50%  { transform: translate(5%, -5%); }
+  75%  { transform: translate(-3%, -3%); }
+  100% { transform: translate(4%, 6%); }
+}
+
+.ui {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: var(--gutter);
+  pointer-events: none;
+}
+.ui > * { pointer-events: auto; }
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+.brand { text-decoration: none; }
+.navLinks { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; }
+.navLinks a { text-decoration: none; opacity: 0.7; transition: opacity 0.3s; }
+.navLinks a:hover { opacity: 1; }
+@media (max-width: 767px) { .navLinks { display: none; } }
+
+.stage { position: relative; }
+
+/* Chaque chapitre apparaît sur sa plage de progression (voir engine.ts). */
+.chapter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--ease), transform 0.8s var(--ease);
+  will-change: opacity, transform;
+}
+.chapter:global(.is-active) { opacity: 1; transform: translateY(0); }
+
+.intro { bottom: clamp(24px, 6vh, 80px); }
+/* Le logotype porte sa propre graisse et son interlignage : ici on ne règle
+   que sa taille, calée sur la largeur de la fenêtre. */
+.title {
+  margin: 16px 0 0;
+  font-size: clamp(40px, 8.5vw, 132px);
+}
+
+.texture { top: 50%; transform: translateY(calc(-50% + 24px)); text-align: right; }
+.texture:global(.is-active) { transform: translateY(-50%); }
+.texture .label { color: var(--red); }
+.texture h2 { font-size: clamp(26px, 3.6vw, 48px); font-weight: 600; max-width: 12ch; margin-left: auto; }
+.texture p { color: var(--smoke); max-width: 34ch; margin: 14px 0 0 auto; font-size: 14px; }
+
+.reveal { bottom: clamp(24px, 6vh, 80px); }
+.reveal h2 { font-size: clamp(28px, 4vw, 56px); font-weight: 700; max-width: 16ch; margin-bottom: 18px; }
+
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--smoke);
+}
+.hint { display: inline-flex; align-items: center; gap: 12px; transition: opacity 0.4s; }
+.hint i {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(var(--ivory), transparent);
+  animation: hint 1.8s var(--ease) infinite;
+}
+@keyframes hint {
+  0%   { transform: scaleY(0); transform-origin: top; }
+  50%  { transform: scaleY(1); transform-origin: top; }
+  51%  { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.hero:global(.is-scrolled) .hint { opacity: 0; }
+
+.progress { width: 120px; height: 1px; background: rgba(244, 242, 238, 0.15); position: relative; }
+.progress i {
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  transform-origin: left;
+  transform: scaleX(var(--hero-progress, 0));
+}
+
+.loader {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  background: var(--black);
+  transition: opacity 0.6s var(--ease), visibility 0.6s;
+}
+.loaderHidden { opacity: 0; visibility: hidden; }
+.loader span { font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--smoke); }
+
+/* Sans animation : le hero devient une affiche fixe. */
+@media (prefers-reduced-motion: reduce) {
+  .hero { height: 100svh; }
+  .sticky::after { animation: none; }
+  .chapter { opacity: 1; transform: none; }
+  .texture, .reveal { display: none; }
+  .hint { display: none; }
+}

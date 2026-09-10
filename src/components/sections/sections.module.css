@@ -1,0 +1,77 @@
+.head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap; margin-bottom: clamp(32px, 5vw, 64px); }
+.head h2 { font-size: clamp(30px, 5vw, 64px); font-weight: 800; text-transform: uppercase; }
+.head p { color: var(--smoke); max-width: 42ch; margin: 0; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: clamp(16px, 2vw, 28px);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--charcoal);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.4s var(--ease);
+}
+.card:hover { border-color: rgba(244, 242, 238, 0.28); transform: translateY(-4px); }
+
+.thumb {
+  container-type: inline-size;
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-width: 100%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(160deg, #1f1f1f, #0d0d0d);
+  overflow: hidden;
+}
+/* Aperçu typographique tant que les photos produit ne sont pas livrées.
+   Le logotype est mis à l'échelle de la carte, jamais de la fenêtre, pour ne
+   pas déborder quand la grille se resserre. */
+.thumbText { font-size: clamp(20px, 9cqi, 34px); max-width: 100%; }
+.badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--smoke);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+
+.body { padding: 20px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.body h3 { font-size: 17px; font-weight: 700; letter-spacing: 0; }
+.meta { color: var(--smoke); font-size: 13px; margin: 0; }
+.price { font-size: 18px; font-weight: 700; margin: 0; }
+
+.swatches { display: flex; gap: 8px; align-items: center; list-style: none; margin: 0; padding: 0; }
+.swatch { width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(244, 242, 238, 0.3); }
+
+.cardCta { margin-top: auto; }
+
+/* Bandeau matière */
+.split { display: grid; gap: clamp(32px, 6vw, 80px); grid-template-columns: 1fr; align-items: center; }
+@media (min-width: 900px) { .split { grid-template-columns: 1fr 1fr; } }
+.split h2 { font-size: clamp(28px, 4vw, 52px); font-weight: 700; text-transform: none; }
+.split p { color: var(--smoke); }
+.specs { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 0; }
+.specs li { display: flex; justify-content: space-between; gap: 24px; padding: 14px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.specs li span:last-child { color: var(--smoke); text-align: right; }
+
+/* Commander */
+.contact { text-align: center; display: grid; gap: 24px; justify-items: center; }
+.contact h2 { font-size: clamp(30px, 5vw, 64px); font-weight: 800; text-transform: uppercase; }
+.contact p { color: var(--smoke); max-width: 48ch; margin: 0; }
+.actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
+.footer { padding-block: 40px; border-top: 1px solid var(--line); }
+.footerInner { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--smoke); }
+.footerInner a { text-decoration: none; }
+.footerInner a:hover { color: var(--ivory); }
