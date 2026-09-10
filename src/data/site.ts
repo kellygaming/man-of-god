@@ -1,10 +1,12 @@
 /** Informations de contact et identité de la marque. */
 export const SITE = {
-  name: 'MAN OF GOD',
+  name: 'AURA BRAND',
+  /** Collection en cours, imprimée sur les vêtements. */
+  collection: 'MOG & WOG',
   tagline: 'Porté avec foi. Porté avec style.',
   description:
-    "Vêtements chrétiens streetwear pensés en Côte d'Ivoire. Hoodies et t-shirts MOG & WOG, coton lourd, sérigraphie haute densité.",
-  url: 'https://manofgod.ci',
+    "AURA BRAND, streetwear chrétien pensé en Côte d'Ivoire. Collection MAN OF GOD et WOMAN OF GOD : pulls, t-shirts et tops en coton lourd, sérigraphie haute densité.",
+  url: 'https://aurabrand.ci',
   phone: '+2250101019747',
   phoneDisplay: '01 01 01 97 47',
   whatsapp: '2250101019747',

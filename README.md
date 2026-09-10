@@ -1,6 +1,7 @@
-# MAN OF GOD
+# AURA BRAND
 
-Site de la marque **MAN OF GOD** (collection MOG & WOG, Abidjan).
+Site de la marque **AURA BRAND**, Abidjan, et de sa collection **MAN OF GOD** et
+**WOMAN OF GOD**.
 Next.js 16, App Router, TypeScript, CSS Modules. Aucune dépendance d'animation :
 le hero est un moteur canvas maison, 20 Ko de source pour le moteur, le
 composant et les styles réunis.
@@ -78,6 +79,21 @@ Tous dans `src/components/ScrollHero/` :
 - **Inertie du scroll** : option `smoothing`, 0.14 par défaut. Plus bas rend le
   mouvement plus lourd, plus haut le rend plus nerveux.
 - Sous `prefers-reduced-motion`, le hero devient une affiche fixe de 100vh.
+
+## Identité
+
+`AURA BRAND` est la marque, `MAN OF GOD` et `WOMAN OF GOD` la collection imprimée
+sur les vêtements. Deux logotypes cohabitent donc, chacun dans son composant :
+
+- `Logotype.tsx` — la marque. AURA large et gras, BRAND en petit dessous, aligné
+  à droite. Il occupe le coin supérieur gauche de l'accueil et de la boutique.
+- `Wordmark.tsx` — la collection. MAN au-dessus, le « of » manuscrit rouge qui
+  déborde à gauche de GOD. C'est le grand titre du hero.
+
+Le lettrage de la marque est composé en **Archivo** très large et très gras,
+l'approche libre la plus proche de la police du logo. Pour un rendu strictement
+identique, déposez le fichier de la police de la marque et changez `--font-logo`
+dans `layout.tsx` : rien d'autre ne bouge.
 
 ## Structure
 

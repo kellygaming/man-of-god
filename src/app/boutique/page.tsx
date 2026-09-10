@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Shop from '@/components/shop/Shop';
 import Footer from '@/components/sections/Footer';
-import Wordmark from '@/components/Wordmark';
+import Logotype from '@/components/Logotype';
 import { SITE, orderLink } from '@/data/site';
 import styles from './boutique.module.css';
 
@@ -17,8 +17,8 @@ export default function BoutiquePage() {
     <>
       <header className={styles.header}>
         <div className={`container ${styles.headerInner}`}>
-          <Link className={styles.brand} href="/" aria-label="MAN OF GOD, accueil">
-            <Wordmark top="Man" bottom="God" inline />
+          <Link className={styles.brand} href="/" aria-label="AURA BRAND, accueil">
+            <Logotype />
           </Link>
           <nav className={styles.nav} aria-label="Navigation">
             <Link href="/">Accueil</Link>

@@ -1,0 +1,32 @@
+/* La taille se règle par `font-size` sur le parent : tout le reste est en em.
+   L'étirement horizontal ne consomme pas de place dans le flux, d'où la marge
+   droite qui réserve le débordement et évite que la navigation ne le chevauche. */
+.logo {
+  display: inline-grid;
+  justify-items: end;
+  line-height: 0.82;
+  font-family: var(--font-logo), "Helvetica Neue", Arial, sans-serif;
+  text-transform: uppercase;
+  color: currentColor;
+  transform: scaleX(1.18);
+  transform-origin: left center;
+  margin-right: 0.65em;
+}
+
+.aura {
+  font-weight: 900;
+  font-stretch: 125%;
+  letter-spacing: -0.015em;
+}
+
+/* « BRAND » se cale sous la fin de « AURA », comme sur le logo rond. */
+.brand {
+  font-size: 0.3em;
+  font-weight: 700;
+  font-stretch: 110%;
+  letter-spacing: 0.52em;
+  /* L'approche ajoute un blanc après la dernière lettre : on le reprend pour
+     que le bloc reste aligné à droite sur « AURA ». */
+  margin-right: -0.52em;
+  margin-top: 0.4em;
+}

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ScrollHero, type ScrollHeroOptions } from './engine';
 import styles from './hero.module.css';
 import { SITE } from '@/data/site';
+import Logotype from '@/components/Logotype';
 import Wordmark from '@/components/Wordmark';
 
 export interface ScrollHeroProps {
@@ -38,8 +39,8 @@ export default function Hero({ options }: ScrollHeroProps) {
 
         <div className={styles.ui}>
           <nav className={styles.nav} aria-label="Navigation principale">
-            <a className={styles.brand} href="#top" aria-label="MAN OF GOD, accueil">
-              <Wordmark top="Man" bottom="God" inline />
+            <a className={styles.brand} href="#top" aria-label="AURA BRAND, accueil">
+              <Logotype />
             </a>
             <ul className={styles.navLinks}>
               <li><a href="/boutique">Boutique</a></li>
